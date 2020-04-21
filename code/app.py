@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_cors import CORS
 import os
+from backend.rating_data import RatingData
 
 
-# Create global variables to store the contents of the dataset
-full_data = None
-holed_data = None
+# Create global variables to store the contents of the datasets
+rating_data = None
+# populari_data = None
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
@@ -15,10 +16,9 @@ CORS(app)
 # Hence, time taken for file I/O is reduced as the csv files (i.e datasets) are only read once and not for every user request.
 @app.before_first_request
 def load_datasets():
-	print("Loading datasets")
-	# global full_data
-	# full_data = FullData()
-
+	print("Loading datasets...")
+	global rating_data
+	rating_data = RatingData()
 	# global holed_data
 	# holed_data = HoledData()
 
@@ -39,8 +39,13 @@ def server_error(error):
     return render_template('500.html'), 500
 
 @app.route('/')
-def go_home():
-	return redirect(url_for('home'))
+def home():
+	return render_template('index.html')
+
+@app.route('/popularity_based')
+def popularity():
+
+    return render_template('index.html')
 
 
 @app.route('/handle_input', methods=['POST'])
